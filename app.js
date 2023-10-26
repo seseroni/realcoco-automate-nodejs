@@ -14,6 +14,9 @@ CrawlingBaon(app);
 var CrawlingBeidelli = require('./routes/beidelli.routes');
 CrawlingBeidelli(app);
 
+var CrawlingWonlog = require('./routes/wonlog.routes');
+CrawlingWonlog(app);
+
 app.listen(3000, () => {
     console.log(`Server is running on port`);
 });
