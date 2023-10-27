@@ -155,8 +155,7 @@ module.exports = function (app) {
                     });
             });
 
-            const csvContent = all_item_info.map(item => item.join(',')).join('
-            ');
+            const csvContent = all_item_info.map(item => item.join(',')).join('');
             fs.writeFileSync(path.join(save_path, '가내스라NEWtable.csv'), csvContent);
 
             // 크롤링 결과를 JSON으로 변환하여 반환
