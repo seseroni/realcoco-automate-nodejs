@@ -4,7 +4,7 @@ const axios = require("axios");
 const cheerio = require("cheerio");
 
 module.exports = function (app) {
-    app.routes('/crawl/benito/best').get(async (req, res) => {
+    app.route('/crawl/benito/best').get(async (req, res) => {
         const save_path = "competitors/crawling/benito/best";
 
         // 이전에 저장된 폴더가 있다면 모두 제거
@@ -51,7 +51,7 @@ module.exports = function (app) {
         });
     });
 
-    app.routes('/crawl/benito/new').get(
+    app.route('/crawl/benito/new').get(
         async (req, res) => {
         const save_path = "competitors/crawling/benito/new";
 
