@@ -14,6 +14,18 @@ CrawlingBaon(app);
 var CrawlingBeidelli = require('./routes/beidelli.routes');
 CrawlingBeidelli(app);
 
+var CrawlingBenito = require('./routes/benito.routes');
+CrawlingBenito(app);
+
+var CrawlingGanaesra = require('./routes/ganaesra.routes');
+CrawlingGanaesra(app);
+
+var CrawlingRirinco = require('./routes/ririnco.routes');
+CrawlingRirinco(app);
+
+var CrawlingSlowand = require('./routes/slowand.routes');
+CrawlingSlowand(app);
+
 var CrawlingWonlog = require('./routes/wonlog.routes');
 CrawlingWonlog(app);
 
