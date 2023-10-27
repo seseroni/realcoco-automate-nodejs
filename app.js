@@ -1,7 +1,13 @@
 const express = require('express');
 const path = require('path');
+const cors = require('cors'); // cors 미들웨어 추가
 
 const app = express();
+
+app.use(cors()); // 모든 URL을 허용하도록 cors 미들웨어를 추가
+// EJS 뷰 엔진 설정
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views')); // 'views' 폴더의 경로를 설정 (이 경로에 EJS 템플릿 파일을 넣어야 합니다)
 
 var Crawling98doci = require('./routes/98doci.routes');
 Crawling98doci(app);
@@ -30,10 +36,6 @@ CrawlingSlowand(app);
 var CrawlingWonlog = require('./routes/wonlog.routes');
 CrawlingWonlog(app);
 
-app.listen(3000, () => {
-    console.log(`Server is running on port`);
-});
-
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
     next(createError(404));
@@ -48,6 +50,10 @@ app.use(function(err, req, res, next) {
     // render the error page
     res.status(err.status || 500);
     res.render('error');
+});
+
+app.listen(3000, () => {
+    console.log(`Server is running on port 3000`);
 });
 
 module.exports = app;
