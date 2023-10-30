@@ -51,7 +51,7 @@ module.exports = function(app) {
 
     app.route('/crawl/baon/new').get(
         async (req, res) => {
-            const save_path = "competitors/crawling/addmore/new";
+            const save_path = "competitors/crawling/baon/new";
 
             // 이전에 저장된 폴더가 있다면 모두 제거
             if (fs.existsSync(save_path)) {
