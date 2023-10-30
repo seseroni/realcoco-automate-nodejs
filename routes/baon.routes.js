@@ -49,7 +49,7 @@ module.exports = function(app) {
         }
     );
 
-    app.route('/crawl/addmore/new').get(
+    app.route('/crawl/baon/new').get(
         async (req, res) => {
             const save_path = "competitors/crawling/addmore/new";
 
