@@ -5,94 +5,91 @@ const fs = require('fs-extra');
 const path = require('path');
 
 module.exports = function(app) {
-    app.route('/crawl/baon/best').get(
-        async (req, res) => {
-            const save_path = "competitors/crawling/baon/best";
+    app.get('/crawl/baon/best', async (req, res) => {
+        const save_path = "competitors/crawling/baon/best";
 
-            // 이전에 저장된 폴더가 있다면 모두 제거
-            if (fs.existsSync(save_path)) {
-                fs.rmdirSync(save_path, { recursive: true });
-            }
+        // 이전에 저장된 폴더가 있다면 모두 제거
+        if (fs.existsSync(save_path)) {
+            fs.rmdirSync(save_path, { recursive: true });
+        }
 
-            // 새로운 폴더 생성
-            fs.mkdirSync(save_path, { recursive: true });
+        // 새로운 폴더 생성
+        fs.mkdirSync(save_path, { recursive: true });
 
-            const url = 'https://ba-on.com/product/best.html?cate_no=132';
-            const headers = { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36' };
+        const url = 'https://ba-on.com/product/best.html?cate_no=132';
+        const headers = { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36' };
 
-            let response = await axios.get(url, { headers });
-            let $ = cheerio.load(response.data);
-            let all_item_info = [];
+        try {
+            const { data } = await axios.get(url, { headers });
+            const $ = cheerio.load(data);
+            let allItemInfo = [];
 
-            $('li.xans-record-').each((idx, item) => {
-                if (idx >= 17 && idx < 37) {
-                    let item_info = [];
+            $('li.xans-record-').slice(17, 37).each((idx, item) => {
 
-                    let thumbnail = 'https:' + $(item).find('img').attr('src');
+                let thumbnail ='https:' + $(item).find('img').attr('src');
 
-                    let product_name = $(item).find('li.name a').text().replace('/', '_');
+                let defaultProductName=$(item).find('.name a').text();
+                let productName=defaultProductName.replace('/', '_');
 
-                    let price = $(item).find('s').eq(1).text();
+                let price=$(item).find("s").eq(1).text();
 
-                    let detail_url = 'https://ba-on.com' + $(item).find('div.thumbnail a').attr('href');
+                let detailUrl='https://ba-on.com' + $(item).find('.thumbnail a').attr('href');
 
-                    item_info.push(thumbnail, product_name, price, detail_url);
+                allItemInfo.push([thumbnail, productName, price,detailUrl]);
 
-                    all_item_info.push(item_info);
-                }
             });
 
             res.json({
-                "message": "Web crawling completed",
-                "data": all_item_info
+                message: "Web crawling completed",
+                data: allItemInfo,
             });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ message: "Server Error" });
         }
-    );
+    });
 
-    app.route('/crawl/baon/new').get(
-        async (req, res) => {
-            const save_path = "competitors/crawling/baon/new";
+    app.get('/crawl/baon/new', async (req, res) => {
+        const save_path = "competitors/crawling/baon/new";
 
-            // 이전에 저장된 폴더가 있다면 모두 제거
-            if (fs.existsSync(save_path)) {
-                fs.rmdirSync(save_path, { recursive: true });
-            }
+        // 이전에 저장된 폴더가 있다면 모두 제거
+        if (fs.existsSync(save_path)) {
+            fs.rmdirSync(save_path, { recursive: true });
+        }
 
-            // 새로운 폴더 생성
-            fs.mkdirSync(save_path, { recursive: true });
+        // 새로운 폴더 생성
+        fs.mkdirSync(save_path, { recursive: true });
 
-            const url = 'https://addmore.co.kr/product/list.html?cate_no=65';
-            const headers = { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36' };
+        const url = 'https://ba-on.com/product/best.html?cate_no=85';
+        const headers = { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36' };
 
-            let response = await axios.get(url, { headers });
-            let $ = cheerio.load(response.data);
-            let all_item_info = [];
+        try {
+            const { data } = await axios.get(url, { headers });
+            const $ = cheerio.load(data);
+            let allItemInfo = [];
 
-            $('div.thumbnail').each((idx, item) => {
-                if (idx < 20) {
-                    let item_info = [];
+            $('li.xans-record-').slice(17, 37).each((idx, item) => {
 
-                    let thumbnail = 'https:' + $(item).find('img').attr('src');
+                let thumbnail ='https:' + $(item).find('img').attr('src');
 
-                    let product_name = $(item).find('div.description p.name').text().replace('상품명 : ', '').replace('#', '_').replace('/', '_').replace('%', 'percent');
+                let defaultProductName=$(item).find('.name a').text();
+                let productName=defaultProductName.replace('/', '_');
 
-                    let default_price = $(item).find('div.description li[rel="판매가"]').text().replace('판매가 : ', '');
+                let price=$(item).find("s").eq(1).text();
 
-                    let sale_price_elem = $(item).find('div.description li[rel="할인판매가"]');
-                    let sale_price = sale_price_elem.length ? sale_price_elem.text().replace('할인판매가 : ', '') : default_price;
+                let detailUrl='https://ba-on.com' + $(item).find('.thumbnail a').attr('href');
 
-                    let detail_url = 'https://addmore.co.kr' + $(item).find('a').attr('href');
+                allItemInfo.push([thumbnail, productName, price,detailUrl]);
 
-                    item_info.push(thumbnail, product_name, default_price, sale_price, detail_url);
-
-                    all_item_info.push(item_info);
-                }
             });
 
             res.json({
-                "message": "Web crawling completed",
-                "data": all_item_info
+                message: "Web crawling completed",
+                data: allItemInfo,
             });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ message: "Server Error" });
         }
-    );
+    });
 }
