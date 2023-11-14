@@ -35,7 +35,7 @@ module.exports = function (app) {
 
                     let default_price = $(item).find('span.price').text().replace('원', '');
 
-                    let sale_price = $(item).find('span.priceSalePercent').text().replace('원', '');
+                    let sale_price = $(item).find('span.price sale ').text().replace('원', '');
 
                     let detail_url = 'https://benito.co.kr' + $(item).find('div.thumbnail a').attr('href');
 
